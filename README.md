@@ -1,6 +1,6 @@
 # The Generic Controller (gentroller) platform
 
-*Note: Please note that this project is in very early stages of elaboration.*
+*Note: Please note that this project is in very early stage of elaboration.*
 
 # Scope
 The purpose of the gentroller platform is to offer a very simple framework for a Linux based control system. The platform executes in Linux user space without requiring any specialized support in the kernel. The assumption is that all the sensors and actuators are connected using Ethernet (TCP/IP), serial (RS-232, RS-422/485), GPIB, IEEE 488.2 etc. protocols. 
