@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 
 	function_1();
 	
-	printer();
+	printer(1);
 	
 	return 0;
 }

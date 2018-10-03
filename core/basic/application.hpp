@@ -1,21 +1,31 @@
-#ifndef BB_APPLICATION
-#define BB_APPLICATION
+#ifndef BX_APPLICATION_HPP
+#define BX_APPLICATION_HPP
 
-namespace Bb_basic
+namespace Bx {
+  namespace Basic {
 
+    class Application
+    {
+      
 
-
-
-
-
-
-
-
+      
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+    };
+  }
+}
 
 #endif

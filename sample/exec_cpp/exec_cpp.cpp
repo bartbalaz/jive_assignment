@@ -27,5 +27,7 @@ int main(int argc, char* argv[])
 	class_1.object_printex();
 	class_2.printName();
     
-	::printer();
+	::printer(1);
+
+  return 0;
 }

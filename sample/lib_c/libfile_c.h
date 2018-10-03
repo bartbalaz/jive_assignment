@@ -2,7 +2,7 @@
 extern "C" {
 #endif
 
-void printer();
+int printer(int toReturn);
 
 #ifdef __cplusplus
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 
-void printer()
+int printer(int toReturn)
 {
 	printf("Build version is ");
 	
@@ -21,4 +21,7 @@ void printer()
 	printf("undefined");
 #endif
 	printf("\n");
+
+  return toReturn;
+  
 }
