@@ -18,9 +18,13 @@ OBJ_DIR = $(BLD_ROOT_PATH)/../target/obj$(PROJ_CFG_PATH)$(REL_PATH)
 
 #-----------------------------------------------------------------------------
 # Recursion
+# Only if the NO_RECURSION is not set
+# NO_RECURSION prevents to recurse when the 
 #-----------------------------------------------------------------------------
 
-RECURS_TARGETS = clean all
+ifndef NO_RECURSION
+	RECURS_TARGETS = clean all
+endif
 
 #-----------------------------------------------------------------------------
 # C, C++ compilation and assembly

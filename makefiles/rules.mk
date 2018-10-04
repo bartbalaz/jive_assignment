@@ -140,12 +140,16 @@ endif
 
 #-----------------------------------------------------------------------------
 # Related libraries build
+# We have to force make to try to build the library to ensure it is up
+# to date. 
 # The EXEC_LIBS variable must be reset in order to prevent undesired 
-# recursion, we have to force make to try to build the library in order
-# to ensure it is uptodate 
+# implicit recursion, triggered by the dependency to have additional
+# libraries
+# We also set the NO_RECURSION to avoid the explicit recursion triggered
+# from the target directory containing REQ_LIBS sources
 #-----------------------------------------------------------------------------
 $(REQ_LIBS): FORCE
-	@$(MAKE) -C $(BLD_ROOT)/$(patsubst lib%.a,%,$(@F)) EXEC_LIBS=
+	@$(MAKE) -C $(BLD_ROOT)/$(patsubst lib%.a,%,$(@F)) EXEC_LIBS= NO_RECURSION=y
 	
 FORCE:
 
