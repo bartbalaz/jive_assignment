@@ -86,7 +86,7 @@ objects : $(_CPP_OBJECTS)
 _OBJECTS += $(_CPP_OBJECTS)
 
 $(_CPP_OBJECTS) : $(OBJ_DIR)/%.o : %.cpp
-	@if test ! -d $(OBJ_DIR); then mkdir -p $(OBJ_DIR); fi; 
+	@if test ! -d $(@D); then mkdir -p $(@D); fi; 
 	${CPP} ${CPP_FLAGS} -c -o $@ $<
 
 clean : clean_cpp_obj
@@ -104,7 +104,7 @@ ifneq ($(findstring clean,$(MAKECMDGOALS)),clean)
 ifneq ($(strip $(_C_SOURCES) $(_CPP_SOURCES)),) 
 
 $(OBJ_DIR)/$(DEP_PREFIX)_hfiles.dep : $(_C_SOURCES) $(_CPP_SOURCES)
-	@if test ! -d $(OBJ_DIR); then mkdir -p $(OBJ_DIR); fi; 
+	@if test ! -d $(@D); then mkdir -p $(@D); fi; 
 	@echo Rebuilding header dependencies... 
 	@$(DEP_MAKER) $(DEP_FLAGS) -M $(_C_SOURCES) $(_CPP_SOURCES) | sed -e 's@ /[^ ]*@ @g' -e '/^[ ]*\\/ d' | sed -e 's@\(.*\.o\)@$(OBJ_DIR)/\1@g' > $@ 
 endif 
@@ -125,7 +125,7 @@ _LIBRARY := $(patsubst %,$(LIB_DIR)/lib%.a,$(LIBRARY))
 libraries : $(_LIBRARY)
 
 $(_LIBRARY) : $(_OBJECTS)
-	@if test ! -d $(LIB_DIR); then mkdir -p $(LIB_DIR); fi;
+	@if test ! -d $(@D); then mkdir -p $(@D); fi;
 	$(AR) $(AR_FLAGS) $@ $(_OBJECTS)
 
 clean : clean_lib
@@ -156,8 +156,13 @@ FORCE:
 #-----------------------------------------------------------------------------
 # Static linking
 #-----------------------------------------------------------------------------
-
+ifdef EXECUTABLE
 _EXECUTABLE := $(patsubst %,$(BIN_DIR)/%,$(EXECUTABLE))
+else
+ifdef TEST_EXECUTABLE
+_EXECUTABLE := $(patsubst %,$(TEST_DIR)/%,$(TEST_EXECUTABLE))
+endif
+endif
 
 _EXEC_LIBS := $(patsubst %,-l%,$(EXEC_LIBS))
 
@@ -169,15 +174,13 @@ _EXEC_LIB_FILES := $(filter-out $patsubst( %,\
 executables: $(_EXECUTABLE)
 
 $(_EXECUTABLE) : $(_OBJECTS) $(_EXEC_LIB_FILES) 
-	@if test ! -d $(BIN_DIR); then mkdir -p $(BIN_DIR); fi;
+	@if test ! -d $(@D); then mkdir -p $(@D); fi;
 	$(LINK) $(LINK_FLAGS) $(_OBJECTS) $(_EXEC_LIBS) $(SYS_LIBS) -o $@ 
 
 clean: clean_exec
 
 clean_exec:
 	rm -rf $(_EXECUTABLE)
-
-
 
 #-----------------------------------------------------------------------------
 # Rules for other tools

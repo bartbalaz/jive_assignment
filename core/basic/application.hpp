@@ -6,21 +6,13 @@ namespace Bx {
 
     class Application
     {
-      
+      Application(int argc, char* pArgv[]);
 
-      
-
-
+  
 
 
 
-
-
-
-
-
-
-
+      void run();
 
 
 

@@ -71,6 +71,8 @@ endif
 
 BIN_DIR := $(BLD_ROOT)/../target/bin$(PROJ_CFG_PATH)
 
+TEST_DIR := $(BLD_ROOT)/../target/test$(PROJ_CFG_PATH)
+
 LIB_PATHS += $(LIB_DIR) $(PROJ_LIB_PATHS) 
 
 LINK_FLAGS = $(patsubst %,-L%,$(LIB_PATHS))
