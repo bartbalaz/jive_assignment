@@ -16,18 +16,21 @@ namespace Bx {
     class Application
     {
       public:
-        Appilcation(Parameters& parameters);
+        virtual Appilcation(Parameters& parameters);
 
-    
         int run(int argc, char* pArgv[]);
+
+        static Parameters& getParameters();
 
       protected:
 
         // This method has to be overriden by the targe application
-        virtual int do_run() = 0;
+        virtual doRun() = 0;
 
         // Parameter class
         Parameters _parameters;
+
+        static Application* _pApplication;
     };
   }
 }

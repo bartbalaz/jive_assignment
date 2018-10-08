@@ -16,8 +16,6 @@ namespace Bx {
         
         getParams(int argc, char* pArgv[]);
 
-      
-
 
       protected:
         std::string _helpMessage;
@@ -25,6 +23,7 @@ namespace Bx {
         po::options_description _parameterDesc;
         
         po::parameter_map _parameter_map;
+
 
       private:
         std::string _configFileName;
