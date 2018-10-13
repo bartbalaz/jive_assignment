@@ -29,11 +29,13 @@ Appilcation::run(int argc, char* pArgv[])
   
   try {
     //Parse the parameters
-    _parameters.getParams(argc, pArgv);
+    if(!_parameters.getParams(argc, pArgv))
+    {
+      // Configure the logger
 
-    // Run the application
-    doRun();
-    
+      // Run the application
+      doRun();      
+    }
   } catch (Exception& e)
   {
     retVal = 1;

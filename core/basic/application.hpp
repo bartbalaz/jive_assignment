@@ -8,7 +8,6 @@
 // This class provides the basic support for any application
 
 
-namespace po = boost::program_options; 
 
 namespace Bx {
   namespace Basic {
