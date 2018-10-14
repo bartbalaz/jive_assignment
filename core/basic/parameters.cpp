@@ -15,7 +15,7 @@ Parameters::Parameters()
               ("help, h", "help information")
               ("file, f", po::value<string>(), "configuration file in INI format")
               ("log-level, ll", po::value<string>()->default_value("inf"),
-                "log level: tra, dbg, inf (default), wrn, err, ftl")
+                "log level: dbg, inf (default), wrn, err, ftl")
               ("log-file, lf", po::value<string>(), "log file name")
               ;
 }
@@ -25,8 +25,8 @@ Parameters::getParams(int argc, char* pArgv[])
 {
   BX_ASSERT((argc && pArgv), "Missing arguments");
 
-  Cont ret(cont);
-
+  int ret(0);
+  
   po::options_description all_parameters;
 
   all_parameters.add(_basicParams).add(_specificParams);
@@ -41,11 +41,13 @@ Parameters::getParams(int argc, char* pArgv[])
     std::cout << pArgv[0] << std::endl;
     
     if(_helpMessage.size())
+    {
       std::cout << _helpMessage << std::endl;
+    }
       
     std::cout << all_parameters << std::endl;
 
-    ret = stop;
+    ret = 1;
   }
   else
   {
@@ -55,12 +57,16 @@ Parameters::getParams(int argc, char* pArgv[])
       po::store(parse_config_file(_parameter_map["file"], ), _parameter_map);
       
       po:notify(_parameter_map);
-
-      ret = cont;
     }
   }
 
   return ret;
+}
+
+std::string&
+Parameters::getLogLevel()
+{
+  return _logLevel;
 }
 
 

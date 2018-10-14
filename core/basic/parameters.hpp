@@ -14,15 +14,10 @@ namespace Bx {
     class Parameters {
       public:
         virtual Parameters();
-
-        enum {
-          cont = 0,
-          stop = 1
-        } Cont;
         
-        Cont getParams(int argc, char* pArgv[]);
+        int getParams(int argc, char* pArgv[]);
 
-        std::string& 
+        std::string& getLogLevel();
 
       protected:
         std::string _helpMessage;

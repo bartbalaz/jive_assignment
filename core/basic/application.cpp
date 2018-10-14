@@ -4,9 +4,14 @@
 
 using namespace Bx::Basic;
 
-static Application* Application::_pApplication(null);
+Application* Application::_pApplication(null);
 
-Application::Appilcation(Parameters& parameters):
+
+
+
+Application::Appilcation(std::string& applicationName, std::string&
+          executableName, std::string& version, std::string& buildTime
+          Parameters& parameters):
 _parameters(parameters)
 {
   if(_pApplication) throw BX_EXCEPTION("Application already created");

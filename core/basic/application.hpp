@@ -15,10 +15,17 @@ namespace Bx {
     class Application
     {
       public:
-        virtual Appilcation(Parameters& parameters);
+        virtual Appilcation(std::string& applicationName, std::string&
+          executableName, std::string& version, std::string& buildTime)
+          Parameters& parameters);
+        
+        
 
         int run(int argc, char* pArgv[]);
 
+        // Parameters are managed by the application at a top level
+        // Any class that needs to read the parameters may invoke
+        //
         static Parameters& getParameters();
 
       protected:
@@ -27,9 +34,16 @@ namespace Bx {
         virtual doRun() = 0;
 
         // Parameter class
-        Parameters _parameters;
+        
+      private:
+        static Application* _pApplicationInstance;
+        
+        std::string _applicationName;
+        std::string _executableName;
+        std::string _version;
+        std::string _buildTime;
 
-        static Application* _pApplication;
+        Parameters _parameters;
     };
   }
 }
