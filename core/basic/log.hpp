@@ -6,13 +6,13 @@
 #include <fstream>
 
 #include "parameters.hpp"
+#include "exception.hpp"
 
 namespace Bx {
   namespace Basic {
     class Log {
       public:
    
-
         enum {
           ftl = 0,
           err = 1,
@@ -29,10 +29,17 @@ namespace Bx {
 
         static void file(std::string& name);
 
-        static void log(logLevel_t, char* pLog);
+        static void log(logLevel_t logLevel, int errno, const char* pFileName,
+          const int lineNum, const char* pFormat...);
         
       private:
+      
+        enum {
+          core_msg_size = 100
+        };
+
         Log();
+        
         ~Log();
 
         static Log _logInstance;
@@ -53,9 +60,18 @@ namespace Bx {
 #define LOG_ERR Bx::Basic::Log::err
 #define LOG_FLT Bx::Basic::Log::ftl
 
+#define BX_LOG(LVL, ARGS...) \
+if (LVL <= Bx::Basic::Log::level() ) { Bx::Basic::Log::log(LVL, \
+  -1, __FILE__, __LINE__, ARGS) }
+
+#define BX_LOG_E(LVL, ARGS...) \
+if (LVL <= Bx::Basic::Log::level() ) { Bx::Basic::Log::log(LVL, \
+  ::errno, __FILE__, __LINE__, ARGS) }
+
+#define BX_LOG_EX(EXCEPTION) \
+Bx::Basic::Log::log_exception(LOG_FTL, -1, __FILE__, __LINE__, \
+  "{%s}", EXCEPTION.what())
 
 
 
-
-
-#endif
+#endif /* BX_LOG_HPP */

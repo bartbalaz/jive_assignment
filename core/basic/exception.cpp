@@ -15,7 +15,7 @@ Exception::Exception(const char* pFileName, const int lineNum,
   va_list argptr;
   va_start(argptr, pFormat);
   
-  snprintf(header, header_size, "%s(%d),e=%d(%s):", basename(pFileName),
+  snprintf(header, header_size, "%s(%d),e=%d(%s):", ::basename(pFileName),
     lineNum, errno, strerror(errno))
   vsnprintf(body, body_size, pFormat, argptr);
   va_end(argptr)

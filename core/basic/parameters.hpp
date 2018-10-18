@@ -17,7 +17,7 @@ namespace Bx {
         
         int getParams(int argc, char* pArgv[]);
 
-        std::string& getLogLevel();
+        inline std::string& logLevel() { return _logLevel; }
 
       protected:
         std::string _helpMessage;
@@ -29,8 +29,9 @@ namespace Bx {
         po::parameter_map _parameter_map;
 
       private:
-        po::string _logLevel;
+        std::string _logLevel;
         
+        std::string _logFile;
     };
 
   }

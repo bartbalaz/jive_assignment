@@ -1,5 +1,5 @@
 BLD_ROOT = ..
 
-SOURCES = application.cpp
+SOURCES = exception.cpp parameters.cpp log.cpp application.cpp 
   
 LIBRARY = basic

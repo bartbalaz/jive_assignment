@@ -4,6 +4,7 @@
 #include <string>
 
 #include "parameters.hpp"
+#include "log.hpp"
 
 // This class provides the basic support for any application
 
@@ -16,9 +17,8 @@ namespace Bx {
     {
       public:
         virtual Appilcation(std::string& applicationName, std::string&
-          executableName, std::string& version, std::string& buildTime)
+          executableName, std::string& version, std::string& buildTime,
           Parameters& parameters);
-        
         
 
         int run(int argc, char* pArgv[]);
@@ -26,7 +26,10 @@ namespace Bx {
         // Parameters are managed by the application at a top level
         // Any class that needs to read the parameters may invoke
         //
-        static Parameters& getParameters();
+        static Parameters& parameters();
+
+        static std::string& appInfo();
+        
 
       protected:
 
@@ -42,8 +45,9 @@ namespace Bx {
         std::string _executableName;
         std::string _version;
         std::string _buildTime;
+        std::string _appInfo;
 
-        Parameters _parameters;
+        Parameters& _parameters;
     };
   }
 }

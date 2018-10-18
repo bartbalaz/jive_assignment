@@ -32,16 +32,19 @@ namespace Bx {
   }
 }
 
-#define BX_EXCEPTION (args...) \
-  throw Bx::Basic::Exception(__FILE__, __LINE__, args)
 
+#define BX_EXCEPTION (ARGS...) \
+  throw Bx::Basic::Exception(__FILE__, __LINE__, ARGS)
+  
 #define BX_EXCEPTION_E (args...) \
-  throw Bx::Basic::Exception(__FILE__, __LINE__, ::errno, args)
+  throw Bx::Basic::Exception(__FILE__, __LINE__, ::errno, ARGS)
 
-#define BX_ASSERT (EXPRESSION, args...) \
-  if(!EXPRESSION) BX_EXCEPTION (args)
+#define BX_ASSERT (EXPRESSION, ARGS...) \
+  if(!EXPRESSION) BX_EXCEPTION (ARGS)
 
 #define BX_ASSERT_E (EXPRESSION, args...) \
-  if(!EXPRESSION) BX_EXCEPTION_E (args) 
+  if(!EXPRESSION) BX_EXCEPTION_E (ARGS) 
+
+
 
 #endif
