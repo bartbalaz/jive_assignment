@@ -9,15 +9,17 @@
 namespace po = boost::program_options; 
 
 namespace Bx {
-  namespace Basic {
+  namespace Base {
 
     class Parameters {
       public:
-        virtual Parameters();
+        Parameters();
         
         int getParams(int argc, char* pArgv[]);
 
-        inline std::string& logLevel() { return _logLevel; }
+        inline std::string& logLevel() { return _logLevel; };
+
+        inline std::string& logFile() { return _logFile; }; 
 
       protected:
         std::string _helpMessage;
@@ -26,7 +28,7 @@ namespace Bx {
 
         po::options_description _specificParams;
         
-        po::parameter_map _parameter_map;
+        po::variables_map _parameter_map;
 
       private:
         std::string _logLevel;

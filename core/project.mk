@@ -89,7 +89,7 @@ endif
 PROJ_C_FLAGS += -Wall -Wno-format -Wno-strict-aliasing -Werror -Wno-long-long 
 
 # Global CPP flags
-PROJ_CPP_FLAGS += -Wall -Wno-format -Wno-strict-aliasing -Werror -Wno-long-long 
+PROJ_CPP_FLAGS += -Wall -Wno-format -Wno-strict-aliasing -Werror -Wno-long-long -std=c++11
 
 ifeq "$(BX_CONFIG)" "debug"
    PROJ_C_FLAGS += -g

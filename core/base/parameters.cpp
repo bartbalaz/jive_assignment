@@ -5,7 +5,7 @@
 #include "parameters.hpp"
 #include "log.hpp"
 
-using namespace Bx::Basic;
+using namespace Bx::Base;
 
 namespace po = boost::program_options;
 
@@ -14,10 +14,10 @@ Parameters::Parameters()
   _basicParams.add_options()
               ("version, v", "application version")
               ("help, h", "help information")
-              ("file, f", po::value<string>(), "configuration file in INI format")
-              ("log-level, ll", po::value<string>()->default_value("inf"),
+              ("file, f", po::value<std::string>(), "configuration file in INI format")
+              ("log-level, ll", po::value<std::string>()->default_value("inf"),
                 "log level: dbg, inf (default), wrn, err, ftl")
-              ("log-file, lf", po::value<string>(), "log file name")
+              ("log-file, lf", po::value<std::string>(), "log file name")
               ;
 }
 
@@ -34,7 +34,7 @@ Parameters::getParams(int argc, char* pArgv[])
   
   po::store(po::parse_command_line(argc, pArgv, all_parameters), _parameter_map);
 
-  po:notify(_parameter_map);
+  po::notify(_parameter_map);
 
   if(_parameter_map.count("help"))
   {
@@ -59,10 +59,11 @@ Parameters::getParams(int argc, char* pArgv[])
         _parameter_map["file"].as<std::string>().c_str())
       
       // Need to load the configuration from the file
-      po::store(parse_config_file(_parameter_map["file"], all_parameters),
-       _parameter_map);
+      std::ifstream fileName(_parameter_map["file"].as<std::string>().c_str());
+      po::store(po::parse_config_file(fileName, all_parameters),
+        _parameter_map);
       
-      po:notify(_parameter_map);
+      po::notify(_parameter_map);
     }
   }
 

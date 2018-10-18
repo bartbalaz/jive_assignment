@@ -1,4 +1,4 @@
 BLD_ROOT = .
 
-SUBDIRS = basic 
+SUBDIRS = base
  

@@ -11,12 +11,12 @@
 
 
 namespace Bx {
-  namespace Basic {
+  namespace Base {
 
     class Application
     {
       public:
-        virtual Appilcation(std::string& applicationName, std::string&
+        Application(std::string& applicationName, std::string&
           executableName, std::string& version, std::string& buildTime,
           Parameters& parameters);
         
@@ -34,7 +34,7 @@ namespace Bx {
       protected:
 
         // This method has to be overriden by the targe application
-        virtual doRun() = 0;
+        virtual void doRun() = 0;
 
         // Parameter class
         

@@ -2,45 +2,44 @@
 #include "exception.hpp"
 #include "application.hpp"
 
-using namespace Bx::Basic;
+using namespace Bx::Base;
 
-Application* Application::_pApplication(null);
-
-
+Application* Application::_pApplicationInstance(nullptr);
 
 
-Application::Appilcation(std::string& applicationName, std::string&
-          executableName, std::string& version, std::string& buildTime
-          Parameters& parameters, Log& log):
+
+
+Application::Application(std::string& applicationName, std::string&
+          executableName, std::string& version, std::string& buildTime,
+          Parameters& parameters):
 _applicationName(applicationName), 
 _executableName(executableName),
 _version(version),
 _buildTime(buildTime),
-_parameters(parameters),
-_log(log)
+_parameters(parameters)
 {
   
   _appInfo =_applicationName + " (" + _executableName + "): " +
     "version: " + _version + ", built time: " + buildTime;
   
   // The instance is overriden without checking
-  _pApplication = this;
+  _pApplicationInstance = this;
 }
 
 Parameters& 
 Application::parameters()
 {
-  BX_ASSERT((_pApplication), "No application");
+  BX_ASSERT((_pApplicationInstance), "No application");
 
-  return _pApplication->_parameters;
+  return _pApplicationInstance->_parameters;
 }
 
 std::string&
 Application::appInfo()
 {
-    BX_ASSERT((_pApplication), "No application");
+    BX_ASSERT((_pApplicationInstance), "No application");
     
-    return _pApplication->_appInfo;
+    return _pApplicationInstance->_appInfo;
 }
  
 int
@@ -49,15 +48,15 @@ Application::run(int argc, char* pArgv[])
   int retVal(0);
   
   try {
-    BX_LOG(LOG_INF, ("Application starting"));
+    BX_LOG(LOG_INF, "Application starting");
 
-    BX_LOG(LOG_INF, ("Application name: %s", _applicationName.c_str()));
+    BX_LOG(LOG_INF, "Application name: %s", _applicationName.c_str());
 
-    BX_LOG(LOG_INF, ("Executable name: %s", _executableName.c_str()));
+    BX_LOG(LOG_INF, "Executable name: %s", _executableName.c_str());
 
-    BX_LOG(LOG_INF, ("Version: %s", _version.c_str()));
+    BX_LOG(LOG_INF, "Version: %s", _version.c_str());
 
-    BX_LOG(LOG_INF, ("Build time: %s", _buildTime.c_str()));
+    BX_LOG(LOG_INF, "Build time: %s", _buildTime.c_str());
 
     //Parse the parameters
     if(!_parameters.getParams(argc, pArgv))
@@ -65,7 +64,7 @@ Application::run(int argc, char* pArgv[])
       BX_LOG(LOG_INF, ("Parameters parsed"));
 
       // Configure the logger
-      Log::log(_parameters.logLevel());
+      Log::level(_parameters.logLevel());
 
       Log::file(_parameters.logFile());
 
@@ -81,7 +80,7 @@ Application::run(int argc, char* pArgv[])
   }
   catch (...)
   {
-    BX_LOG(LOG_FLT, "Caught an unexpected exception");
+    BX_LOG(LOG_FTL, "Caught an unexpected exception");
     
     retVal = 2;
   }
