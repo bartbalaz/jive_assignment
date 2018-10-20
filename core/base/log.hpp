@@ -39,8 +39,6 @@ namespace Bx {
         };
 
         Log();
-        
-        ~Log();
 
         static Log _logInstance;
 

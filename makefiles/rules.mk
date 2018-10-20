@@ -166,10 +166,9 @@ endif
 
 _EXEC_LIBS := $(patsubst %,-l%,$(EXEC_LIBS))
 
-_EXEC_LIB_FILES := $(filter-out $patsubst( %,\
-                   $(LIB_DIR)/lib%.a,$(EXEC_LIBS_NO_DEPENDENCY)),\
-                   $(patsubst %,$(LIB_DIR)/lib%.a,$(EXEC_LIBS)))
+_EXEC_LIB_FILES := $(patsubst %,$(LIB_DIR)/lib%.a,$(EXEC_LIBS))
 
+_EXEC_LIBS += $(patsubst %,-l%,$(EXEC_LIBS_NO_DEPENDENCY))
 
 executables: $(_EXECUTABLE)
 
