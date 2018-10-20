@@ -24,6 +24,11 @@ _logLevel(dbg)
 {
 }
 
+Log::~Log()
+{
+  file("");
+}
+
 void
 Log::level(std::string& logLevel)
 {
@@ -51,28 +56,44 @@ Log::level(logLevel_t logLevel)
   _logInstance._logLevel = logLevel;
 }
 
+
+void
+Log::file(const char* name)
+{
+  std::string fileName(name);
+
+  Log::file(fileName);
+}
+
 void
 Log::file(std::string& name)
 {
+  pt::ptime localTime = pt::second_clock::local_time();
+  
+  if(_logInstance._logFile.is_open())
+  {
+    BX_LOG(LOG_DBG, "Closing an opened log file");
+    
+    _logInstance._logFile << "Log file: " << name << " closed at "
+    << pt::to_simple_string (localTime) << std::endl;
+    
+    _logInstance._logFile.close();
+  }    
+
   if(name.size())
   {
-    pt::ptime localTime = pt::second_clock::local_time();
+    BX_LOG(LOG_DBG, "Opening log file '%s'", name.c_str());
     
+    _logInstance._logFile.open(name, std::ios::trunc | std::ios::out);
+
     if(_logInstance._logFile.is_open())
     {
-      _logInstance._logFile << "Log file: " << name << " closed at "
-      << pt::to_simple_string (localTime) << std::endl;
+
+      BX_LOG(LOG_DBG, "Writing into log file", name.c_str());
       
-      _logInstance._logFile.close();
-    }
-
-    _logInstance._logFile.open(name, std::ios::trunc);
-
-    if(_logInstance._logFile.is_open())
-    {
       _logInstance._logFile << "Log file: " << name << " opened at "
-          << pt::to_simple_string (localTime) << std::endl
-          << "Application info: " << Application::appInfo() << std::endl;
+          << pt::to_simple_string (localTime) << std::endl;
+    //      << "Application info: " << Application::appInfo() << std::endl;
     }
   }
 }

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <error.h>
 
 #include "parameters.hpp"
 #include "exception.hpp"
@@ -29,6 +30,8 @@ namespace Bx {
 
         static void file(std::string& name);
 
+        static void file(const char* name);
+
         static void log(logLevel_t logLevel, int error, const char* pFileName,
           const int lineNum, const char* pFormat, ...);
         
@@ -39,6 +42,8 @@ namespace Bx {
         };
 
         Log();
+
+        ~Log();
 
         static Log _logInstance;
 
@@ -64,12 +69,15 @@ if (LVL <= Bx::Base::Log::level()) { Bx::Base::Log::log(LVL, \
 
 #define BX_LOG_E(LVL, ARGS...) \
 if (LVL <= Bx::Base::Log::level()) { Bx::Base::Log::log(LVL, \
-  ::errno, __FILE__, __LINE__, ARGS); }
+  errno, __FILE__, __LINE__, ARGS); }
 
 #define BX_LOG_EX(EXCEPTION) \
 Bx::Base::Log::log(LOG_FTL, -1, __FILE__, __LINE__, \
   "{%s}", EXCEPTION.what());
 
+#define BX_LOG_E_EX(EXCEPTION) \
+Bx::Base::Log::log(LOG_FTL, errno, __FILE__, __LINE__, \
+  "{%s}", EXCEPTION.what());
 
 
 #endif /* BX_LOG_HPP */

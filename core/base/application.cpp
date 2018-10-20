@@ -6,7 +6,7 @@ using namespace Bx::Base;
 
 Application* Application::_pApplicationInstance(nullptr);
 
-
+std::string Application::_noAppInfo("No application");
 
 
 Application::Application(std::string& applicationName, std::string&
@@ -37,7 +37,10 @@ Application::parameters()
 std::string&
 Application::appInfo()
 {
-    BX_ASSERT((_pApplicationInstance), "No application");
+    if(!_pApplicationInstance)
+    {
+      _noAppInfo
+    }
     
     return _pApplicationInstance->_appInfo;
 }

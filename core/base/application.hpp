@@ -47,6 +47,8 @@ namespace Bx {
         std::string _buildTime;
         std::string _appInfo;
 
+        static std::string _noAppInfo;
+
         Parameters& _parameters;
     };
   }
