@@ -19,6 +19,10 @@ Log Log::_logInstance;
 
 std::vector<std::string> Log::_levelVec = { "ftl", "err", "wrn", "inf", "dbg" };
 
+std::string Log::_logLevelHelp;
+
+std::string Log::_defaultLogLevel("dbg");
+
 Log::Log():
 _logLevel(dbg)
 {
@@ -81,7 +85,7 @@ Log::file(std::string& name)
   if(_logInstance._logFile.is_open())
   {
     _logInstance._logFile << "Log file: " << name << " closed at "
-    << pt::to_simple_string (localTime) << std::endl;
+      << pt::to_simple_string (localTime) << std::endl;
     
     _logInstance._logFile.close();
   }    
@@ -145,4 +149,24 @@ Log::log(logLevel_t logLevel, int error, const char* pFileName,
   }
 }
 
+std::string&
+Log::logLevelHelp()
+{
+  if (!_logLevelHelp.size())
+  {
+    for(std::vector<std::string>::const_iterator i = _levelVec.begin();
+      i != _levelVec.end(); i++)
+    {
+      _logLevelHelp += (i == _levelVec.begin() ? "" : ", ") + (*i);
+    }
+       
+    _logLevelHelp += "\ndefault: " + _defaultLogLevel;
+  }
+  return _logLevelHelp;
+}
 
+std::string&
+Log::defaultLogLevel()
+{
+  return _defaultLogLevel;
+}

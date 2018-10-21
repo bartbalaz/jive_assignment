@@ -24,9 +24,11 @@ namespace Bx {
       protected:
         std::string _helpMessage;
 
-        po::options_description _basicParams;
+        po::options_description _commonParams;
 
-        po::options_description _specificParams;
+        po::options_description _comandLineParams;
+
+        po::options_description _fileParams;
         
         po::variables_map _parameter_map;
 

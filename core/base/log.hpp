@@ -36,6 +36,10 @@ namespace Bx {
 
         static void log(logLevel_t logLevel, int error, const char* pFileName,
           const int lineNum, const char* pFormat, ...);
+
+        static std::string& logLevelHelp();
+
+        static std::string& defaultLogLevel();
         
       private:
       
@@ -50,6 +54,10 @@ namespace Bx {
         static Log _logInstance;
 
         static std::vector<std::string> _levelVec;
+
+        static std::string _logLevelHelp;
+
+        static std::string _defaultLogLevel;
       
         std::ofstream _logFile;
         
