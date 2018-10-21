@@ -37,7 +37,7 @@ namespace Bx {
   throw Bx::Base::Exception(__FILE__, __LINE__, ARGS);
   
 #define BX_EXCEPTION_E(ARGS...) \
-  throw Bx::Base::Exception(__FILE__, __LINE__, ::errno, ARGS);
+  throw Bx::Base::Exception(__FILE__, __LINE__, errno, ARGS);
 
 #define BX_ASSERT(EXPRESSION, ARGS...) \
   if(!(EXPRESSION)) { BX_EXCEPTION (ARGS); }

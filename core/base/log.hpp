@@ -22,6 +22,8 @@ namespace Bx {
           dbg = 4
         } logLevel_t;
 
+        static void level(const char* logLevel);
+
         static void level(std::string& logLevel);
 
         static void level(logLevel_t logLevel);
@@ -73,11 +75,11 @@ if (LVL <= Bx::Base::Log::level()) { Bx::Base::Log::log(LVL, \
 
 #define BX_LOG_EX(EXCEPTION) \
 Bx::Base::Log::log(LOG_FTL, -1, __FILE__, __LINE__, \
-  "{%s}", EXCEPTION.what());
+   EXCEPTION.what());
 
 #define BX_LOG_E_EX(EXCEPTION) \
 Bx::Base::Log::log(LOG_FTL, errno, __FILE__, __LINE__, \
-  "{%s}", EXCEPTION.what());
+   EXCEPTION.what());
 
 
 #endif /* BX_LOG_HPP */
