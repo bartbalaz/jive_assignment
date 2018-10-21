@@ -154,6 +154,14 @@ $(REQ_LIBS): FORCE
 FORCE:
 
 #-----------------------------------------------------------------------------
+# Test ressources, copy the test ressource files to the test directory
+#-----------------------------------------------------------------------------
+_TEST_RESSOURCES := $(patsubst %,$(TEST_DIR)/%,$(TEST_RESOURCES))
+
+$(_TEST_RESSOURCES) : $(TEST_RESOURCES)
+	cp -r $(@F) $@
+	
+#-----------------------------------------------------------------------------
 # Static linking
 #-----------------------------------------------------------------------------
 ifdef EXECUTABLE
@@ -172,7 +180,7 @@ _EXEC_LIBS += $(patsubst %,-l%,$(EXEC_LIBS_NO_DEPENDENCY))
 
 executables: $(_EXECUTABLE)
 
-$(_EXECUTABLE) : $(_OBJECTS) $(_EXEC_LIB_FILES) 
+$(_EXECUTABLE) : $(_OBJECTS) $(_EXEC_LIB_FILES) $(_TEST_RESSOURCES)
 	@if test ! -d $(@D); then mkdir -p $(@D); fi;
 	$(LINK) $(LINK_FLAGS) $(_OBJECTS) $(_EXEC_LIBS) $(SYS_LIBS) -o $@ 
 
