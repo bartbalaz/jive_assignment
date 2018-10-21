@@ -159,6 +159,7 @@ FORCE:
 _TEST_RESSOURCES := $(patsubst %,$(TEST_DIR)/%,$(TEST_RESOURCES))
 
 $(_TEST_RESSOURCES) : $(TEST_RESOURCES)
+	@if test ! -d $(@D); then mkdir -p $(@D); fi;
 	cp -r $(@F) $@
 	
 #-----------------------------------------------------------------------------
