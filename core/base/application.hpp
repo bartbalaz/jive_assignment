@@ -21,7 +21,7 @@ namespace Bx {
           Parameters& parameters);
         
 
-        int run(int argc, char* pArgv[]);
+        int run(int argc, const char* pArgv[]);
 
         // Parameters are managed by the application at a top level
         // Any class that needs to read the parameters may invoke

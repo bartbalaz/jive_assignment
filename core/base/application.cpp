@@ -46,7 +46,7 @@ Application::appInfo()
 }
  
 int
-Application::run(int argc, char* pArgv[])
+Application::run(int argc, const char* pArgv[])
 {
   int retVal(0);
   

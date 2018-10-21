@@ -1,6 +1,6 @@
 BLD_ROOT = ../..
 
-SOURCES = log_test.cpp test.cpp
+SOURCES = log_test.cpp parameters_test.cpp test.cpp
   
 TEST_EXECUTABLE = lib_base_test
 

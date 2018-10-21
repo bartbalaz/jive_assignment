@@ -94,7 +94,8 @@ Log::file(std::string& name)
     {     
       _logInstance._logFile << "Log file: '" << name << "' opened at "
           << pt::to_simple_string (localTime) << std::endl 
-          << "Application info: " << Application::appInfo() << std::endl;
+          << "Application version information: " << std::endl
+          << Application::appInfo() << std::endl;
     }
   }
 }

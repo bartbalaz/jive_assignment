@@ -15,7 +15,7 @@ namespace Bx {
       public:
         Parameters();
         
-        int getParams(int argc, char* pArgv[]);
+        int getParams(int argc, const char* pArgv[]);
 
         inline std::string& logLevel() { return _logLevel; };
 
