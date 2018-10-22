@@ -81,7 +81,7 @@ bool parameters_test_2()
   try
   {
     BX_LOG(LOG_INF, "Setting log level to 'ftl' and log file"
-    " to 'log_file.txt");
+    " to 'log_file.txt'");
 
     const char* argv[] = { "app_name", "-l", "ftl", "-o", "log_file.txt" };
 
@@ -112,5 +112,46 @@ bool parameters_test_2()
   return ret;
 }
 
+bool parameters_test_3()
+{
+  BX_LOG(LOG_INF, "parameters_test_3");
+  
+  bool ret(true);
+  
+  try
+  {
+    BX_LOG(LOG_INF, "Setting log level to 'wrn' and log file"
+    " to 'log_file.txt' through the configuration file");
+
+    const char* argv[] = { "app_name", "-f", "config-file.ini" };
+
+    ParametesTest1 parameterTest("This is a help message");
+
+    parameterTest.getParams(3, argv);
+
+    BX_ASSERT((parameterTest.logLevel() == "wrn"),
+      "Log level not set prorietly, '%s' instead of 'wrn')",
+      parameterTest.logLevel().c_str());
+
+    BX_ASSERT((parameterTest.logFile() == "log_output_file.txt"),
+      "Log file not set prorietly, '%s' instead of 'log_output_file.txt'",
+      parameterTest.logFile().c_str());
+  }
+  catch (Bx::Base::Exception &e)
+  {
+    BX_LOG_EX(e);
+    ret = false;
+  }
+  catch (std::exception& e)
+  {
+    BX_LOG_E_EX(e);
+    ret = false;
+  }
+
+
+  BX_LOG(LOG_INF, "parameters_test_3 done");
+  
+  return ret;
+}
 
 

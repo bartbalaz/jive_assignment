@@ -26,7 +26,7 @@ _fileParams("Configuraiton file only parameters")
   _comandLineParams.add_options()
     ("version,v", "application version information")
     ("help,h", "help information")
-    ("configuration-file,f", po::value<std::string>(), "configuration file in INI format")
+    ("config-file,f", po::value<std::string>(), "configuration file in INI format")
     ;
     
   _comandLineParams.add(_commonParams);
@@ -71,13 +71,13 @@ Parameters::getParams(int argc, const char* pArgv[])
     po::notify(_parameter_map);
     
     // Read the parameters from file if file was specified
-    if(_parameter_map.count("file"))
+    if(_parameter_map.count("config-file"))
     {
       BX_LOG(LOG_INF, "Reading parameters from file '%s'",
-        _parameter_map["file"].as<std::string>().c_str())
+        _parameter_map["config-file"].as<std::string>().c_str())
       
       // Need to load the configuration from the file
-      std::ifstream fileName(_parameter_map["file"].as<std::string>().c_str());
+      std::ifstream fileName(_parameter_map["config-file"].as<std::string>().c_str());
       po::store(po::parse_config_file(fileName, _fileParams),
         _parameter_map);
       

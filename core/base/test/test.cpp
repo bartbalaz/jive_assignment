@@ -33,6 +33,8 @@ BOOST_AUTO_TEST_CASE(parameters_test)
   separator();
   BOOST_CHECK(parameters_test_2());
   separator();
+  BOOST_CHECK(parameters_test_3());
+  separator();
 
 }
 

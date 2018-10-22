@@ -125,12 +125,12 @@ Log::log(logLevel_t logLevel, int error, const char* pFileName,
     // Prepare the buffer
     std::stringstream ss;
 
-    ss << localTime.date().year() << "/" << localTime.date().month()
+    ss << _levelVec[logLevel] << "|"<< localTime.date().year() << "/"
+      << localTime.date().month()
       << "/" << localTime.date().day()
       << "|" << localTime.time_of_day().hours()
       << ":" << localTime.time_of_day().minutes()
-      << ":" << localTime.time_of_day().seconds()
-      << "(" << _levelVec[logLevel] << "),"
+      << ":" << localTime.time_of_day().seconds() << "|"
       << ::basename(fileName) << "(" << lineNum << "):"
       << msg;
       
