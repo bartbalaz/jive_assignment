@@ -4,34 +4,63 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <arpa/inet.h>
+#include <pthread.h>
 
+#include "common/log.h"
 
 #define BUFFER_SIZE 1024
-#define SPOOL_BUFFER 1024
+#define STACK_SIZE 8192
 
-
-#define on_error(...) { fprintf(stderr, __VA_ARGS__); if(log_file > 0) close(log_file); fflush(stderr); return 1; }
-
-int server(int port, const char* spool_file_name)
+struct connection_info
 {
-	printf("Starting server on port %d\n", port);
-  
-  int server_fd, client_fd, err, char_count;
-  struct sockaddr_in server, client;
-  char buf[BUFFER_SIZE];
-  char spool_buffer[SPOOL_BUFFER];
+  int client_fd;
+  int connection_count;
+  struct sockaddr_in client;
+};
 
-  /* Open the file log file */
-  int log_file = open(spool_file_name, O_CREAT | O_TRUNC | O_RDWR,
-                  S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH  );
-  if (log_file <= 0 ) on_error("Could not open file %s\n", spool_file_name);
+
+void *connection (void *arg)
+{
+  char buf[BUFFER_SIZE];
+  int err;
+  struct connection_info *info = (struct connection_info *) arg;
+
+  LOG("Starting connection %d from: %s", info->connection_count, inet_ntoa((info->client.sin_addr)));
+  
+  while (1) {
+    int read = recv(info->client_fd, buf, BUFFER_SIZE, 0);
+
+    if (!read) {
+      LOG("Finished connection %d from: %s", info->connection_count, inet_ntoa((info->client.sin_addr)));
+      break; // done reading
+    }
+    ASSERT_E(read > 0, "Client read failed");
+
+    err = send(info->client_fd, buf, read, 0);
+    ASSERT_E(err >= 0, "Client write failed");
+
+    LOG("Echoed (bytes %d), on connection %d", err, info->connection_count);
+  }
+
+  free(info);
+
+  return NULL;
+}
+
+
+
+int server(int port)
+{
+	LOG("Starting server on port %d", port);
+  
+  int server_fd, client_fd, err, connection_count = 0;
+  struct sockaddr_in server, client;
+  pthread_attr_t attr;
+  pthread_t thread;
 
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
-  if (server_fd < 0) on_error("Could not create socket\n");
+  ASSERT_E(server_fd > 0, "Could not create socket");
 
   server.sin_family = AF_INET;
   server.sin_port = htons(port);
@@ -41,40 +70,29 @@ int server(int port, const char* spool_file_name)
   setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof opt_val);
 
   err = bind(server_fd, (struct sockaddr *) &server, sizeof(server));
-  if (err < 0) on_error("Could not bind socket\n");
+  ASSERT_E(err >= 0, "Could not bind socket");
 
   err = listen(server_fd, 128);
-  if (err < 0) on_error("Could not listen on socket\n");
+  ASSERT_E(err >= 0,"Could not listen on socket");
 
-  printf("Server is listening on %d\n", port);
+  LOG("Server is listening on %d", port);
+
+  ASSERT_E(pthread_attr_init(&attr) == 0, "Could not innitialize pthread attributes");
+
+  ASSERT_E(pthread_attr_setstacksize(&attr, STACK_SIZE) != 0,
+          "Could not set pthread stack size");
 
   while (1) {
     socklen_t client_len = sizeof(client);
     client_fd = accept(server_fd, (struct sockaddr *) &client, &client_len);
 
-    if (client_fd < 0) on_error("Could not establish new connection\n");
+    ASSERT_E(client_fd > 0,"Could not establish new connection");
 
-    char_count = snprintf(spool_buffer, SPOOL_BUFFER, "Starting connection from: %s\n",
-                  inet_ntoa((client.sin_addr)));
-                  
-    write(log_file, spool_buffer, char_count);
+    struct connection_info *info = malloc(sizeof(struct connection_info));
+    info->client_fd = client_fd;
+    info->connection_count = connection_count++;
+    info->client = client;
 
-    while (1) {
-      int read = recv(client_fd, buf, BUFFER_SIZE, 0);
-
-      if (!read) {
-        char_count = snprintf(spool_buffer, SPOOL_BUFFER, "Finished connection from: %s\n",
-                  inet_ntoa((client.sin_addr)));
-        write(log_file, spool_buffer, char_count);
-        break; // done reading
-      }
-      if (read < 0) on_error("Client read failed\n");
-
-      err = send(client_fd, buf, read, 0);
-      if (err < 0) on_error("Client write failed\n");
-
-      char_count = snprintf(spool_buffer, SPOOL_BUFFER, "Echoed (%d)\n\%s", err, buf);
-      write(log_file, spool_buffer, char_count);
-    }
+    pthread_create( &thread, &attr, connection, (void*) info);
   }
 }

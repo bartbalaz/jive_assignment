@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "common/log.h"
 #include "server.h"
 
 int main(int argc, char* argv[])
@@ -8,7 +9,7 @@ int main(int argc, char* argv[])
   int ret = 0;
 
   if(argc < 3) {
-    printf("Usage: %s <port_number> <spool_file_name>\n", argv[0]);
+    printf("Usage: %s <port_number> <log_file_name>\n", argv[0]);
     ret = 1;
   }
   else {
@@ -20,7 +21,8 @@ int main(int argc, char* argv[])
       ret = 1;
     }
     else {
-      ret = server(port, argv[2]);
+      open_log_file(argv[2]);
+      ret = server(port);
     }
   }
 	
