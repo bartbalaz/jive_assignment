@@ -8,27 +8,42 @@
 #include <unistd.h>
 
 
- 
-
-#include "json.h"
+#include "aor.h"
 #include "log.h"
 
 int file_handle = -1;
 
 #define BUFFER_SIZE 128
+#define HASH_TABLE_SIZE 997
 
+aor_t *aor_hash_table[HASH_TABLE_SIZE];
 
-void open_json_file(char* filename)
+unsigned int calc_hash(const char* key)
+{
+  unsigned int hash = 0;
+  
+  for(i = 0; i < strlen(key); i++) {
+    hash += key[i];
+  }
+
+  return hash;
+}
+
+void open_aor_file(char* filename)
 {
     ASSERT(file_handle == -1, "File already opened");
 
     file_handle = open(filename, O_RDONLY);
 
+    /* clear the hash table */
+    for(int i = 0; i < HASH_TABLE_SIZE; i++) {
+      aor_hash_table[i] = NULL;
+    }
 
     ASSERT_E(file_handle > 0, "Could not open file");
 }
 
-json_object* read_json_file()
+void read_aor_file()
 {
   ASSERT(file_handle > 0, "File not opened");
  
@@ -39,19 +54,12 @@ json_object* read_json_file()
   work_buffer[work_buffer_size] = 0;
   char *start;
   char *end;
-  json_object *head = NULL;
-  json_object *tail = NULL;
 
 
   while ( (read_chars = read(file_handle, work_buffer+total_read_chars,
                   work_buffer_size - total_read_chars)) ) {
 
-
     total_read_chars += read_chars;
-
-    LOG("Read %d from file, work_buffer_size %d, total read_chars %d",
-        read_chars, work_buffer_size, total_read_chars);
-
     
     /* Try to see if we have both start and end symbols */
     start = strchr(work_buffer, '{');
@@ -63,7 +71,6 @@ json_object* read_json_file()
       work_buffer_size *= 2;
       work_buffer = (char*) realloc(work_buffer, work_buffer_size + 1);
       work_buffer[work_buffer_size] = 0;
-      LOG("We coudn't read whole record, resising to %d", work_buffer_size);
     }
     
     while(start && end) {
@@ -113,8 +120,6 @@ json_object* read_json_file()
       /* Create the key value */
       content_size = (unsigned long long)end_of_value - (unsigned long long)cursor;
 
-      LOG("Key size is %lu", content_size);
-
       char* key = (char*) malloc (content_size + 1);
 
       memcpy(key, cursor, content_size);
@@ -122,25 +127,30 @@ json_object* read_json_file()
       key[content_size] = 0;
 
       /* Create the output data strcutre */
-      json_object *obj = (json_object*)malloc(sizeof(json_object));
+      aor_t *aor = (aor_t*)malloc(sizeof(aor_t));
+        
+      aor->key = key;
 
-      obj->key = key;
+      aor->content = content;
 
-      obj->content = content;
+      unsigned int hash = calc_hash(key) ;
 
-      obj->next = NULL;
+      aor->next = NULL;
 
-      LOG("Read addressOfRecord with key '%s' and content:", obj->key);
+      aor_t *head = NULL;
 
-      DUMP(obj->content);
-
-      if(!head){
-        head = obj;
-        tail = obj;
+      if(aor_hash_table[hash] == NULL) {
+        aor_hash_table[hash] = aor;
       }
       else {
-        tail->next = obj;
-        tail = obj;
+        head = aor_hash_table[hash];
+      
+        
+        while(head->next) {
+          
+          head = head->next;
+        }
+        head->next = aor;
       }
     }
   }
@@ -149,7 +159,7 @@ json_object* read_json_file()
 }
   
 
-void close_json_file()
+void close_aor_file()
 {
   ASSERT(file_handle > 0, "File already closed");
 

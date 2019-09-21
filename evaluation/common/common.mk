@@ -1,6 +1,6 @@
 BLD_ROOT = ..
 
 SOURCES = log.c\
-					json.c
+					aor.c
 
 LIBRARY = common

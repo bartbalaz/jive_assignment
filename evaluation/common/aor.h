@@ -5,15 +5,15 @@
  */
 
 
-typedef struct json_object_s {
+typedef struct aor_s {
   char *key;
   char *content;
-  struct json_object_s *next; 
-} json_object; 
+  struct aor_s *next; 
+} aor_t; 
 
 
-void open_json_file(char* filename);
+void open_aor_file(char* filename);
 
-json_object* read_json_file();
+void read_aor_file();
 
-void close_json_file();
+void close_aor_file();

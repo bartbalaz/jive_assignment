@@ -12,16 +12,16 @@
 #include <string.h>
 
 
-#include "common/json.h"
+#include "common/aor.h"
 
 
 int main(int argc, char *argv[])
 {
-  open_json_file("input.json");
+  open_aor_file("input.json");
 
-  json_object *head = read_json_file();
+  aor_t *head = read_aor_file();
 
-  close_json_file();
+  close_aor_file();
 
   int log_file_handle = open("out.json", O_CREAT | O_TRUNC | O_RDWR,
                     S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH  );
@@ -29,7 +29,6 @@ int main(int argc, char *argv[])
   while(head)
   {
     write(log_file_handle, head->content, strlen(head->content));
-    //write(log_file_handle, "\n", 1);
     head = head->next;
   }
 

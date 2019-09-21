@@ -1,6 +1,6 @@
 BLD_ROOT = ../..
 
-SOURCES = json_test.c
+SOURCES = aor_test.c
   
 TEST_EXECUTABLE = common_lib_test
 
