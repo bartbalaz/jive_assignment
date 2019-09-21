@@ -55,7 +55,7 @@ void dump_all_aors_to_file(const char* filename)
   close(dump_file_handle);
 }
 
-void open_aor_file(char* filename)
+void open_aor_file(const char* filename)
 {
   ASSERT(file_handle == -1, "File already opened");
 
@@ -142,7 +142,7 @@ void read_aor_file()
       
       
       /* We have a complete record, create a content, need to add 2 to compensage for the line termination */
-      unsigned long content_size = ((unsigned long) end - (unsigned long) start) + 2;
+      unsigned long long content_size = ((unsigned long long) end - (unsigned long long) start) + 2;
 
       /* Allocating size +1 byte for null termination */
       char* content = (char*) malloc (content_size + 1);
@@ -186,7 +186,7 @@ void read_aor_file()
       ASSERT(end_of_value != NULL, "Could not find end of value");
 
       /* Create the key value */
-      content_size = (unsigned long long)end_of_value - (unsigned long long)cursor;
+      content_size = ((unsigned long long)end_of_value - (unsigned long long)cursor);
 
       char* key = (char*) malloc (content_size + 1);
       memcpy(key, cursor, content_size);

@@ -34,8 +34,10 @@ void open_log_file(const char* file_name) {
 
   LOG("Log file %s opened!", file_name);
 
+/*
   void *void_ptr;
-  ASSERT(sizeof(void_ptr) == 4, "Compilation in 64 bit mode is not supported!");
+  ASSERT(sizeof(void_ptr) == sizeof(unsigned long long), "Compilation in 64 (%d) bit mode is not supported!", sizeof(void_ptr));
+ */
 }
 
 void close_log_file() {
@@ -70,8 +72,7 @@ void dump(const char* file_name, const int line_num, const char* buffer)
 void trivial_log(int error, const char* file_name,
   const int line_num, const char* format,...)
 {
-
-  
+ 
   char user_msg[LOG_MESSAGE_SIZE];
   char time_msg[LOG_MESSAGE_SIZE];
   char full_msg[LOG_MESSAGE_SIZE];

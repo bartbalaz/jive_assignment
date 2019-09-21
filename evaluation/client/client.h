@@ -2,8 +2,10 @@
 extern "C" {
 #endif
 
-void server(int port, const char* aor_file_name);
+void client(const char* server_address, int port, int test_cycle);
 
 #ifdef __cplusplus
 }
 #endif
+
+

@@ -4,6 +4,10 @@
  * field.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 typedef struct aor_s {
   char *key;
@@ -12,7 +16,7 @@ typedef struct aor_s {
 } aor_t; 
 
 
-void open_aor_file(char* filename);
+void open_aor_file(const char* filename);
 
 void read_aor_file();
 
@@ -23,3 +27,7 @@ aor_t* get_first_aor(const char* key);
 aor_t* get_next_aor(aor_t* aor);
 
 void close_aor_file();
+
+#ifdef __cplusplus
+}
+#endif
