@@ -18,6 +18,8 @@ void close_log_file();
 void trivial_log(int error, const char* file_name,
   const int line_num, const char* format,...);
 
+void dump(const char* file_name, const int line_num, const char* buffer);
+
 /* All the macros that contain the "_E" suffix add the value
  * of errno to the log message.
  */
@@ -29,6 +31,9 @@ void trivial_log(int error, const char* file_name,
 
 #define LOG_E(ARGS...) \
 { trivial_log(errno, __FILE__, __LINE__, ARGS); }
+
+#define DUMP(ARG) \
+{ dump(__FILE__, __LINE__, ARG); }
 
 
 /* Abort macros, that abort the exectuion */

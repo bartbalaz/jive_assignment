@@ -31,15 +31,39 @@ void open_log_file(const char* file_name) {
                     S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH  );
                     
   ASSERT_E(log_file_handle > 0, "Could not open log file %s", file_name);
+
+  LOG("Log file %s opened!", file_name);
+  
 }
 
 void close_log_file() {
   if(log_file_handle > 0) {
+    LOG("Log file %s closed!");
     close(log_file_handle);
     log_file_handle = -1;
   } 
 }
 
+void dump(const char* file_name, const int line_num, const char* buffer)
+{
+  trivial_log(-1, file_name, line_num, "Beginning of dump");
+  
+  /* Ensure thread safe */
+  pthread_mutex_lock(&log_mutex);
+
+  /*
+   * Dump on the console
+   */
+  printf("%s\n", buffer);
+
+  if(log_file_handle > 0) {
+    write(log_file_handle, buffer, strlen(buffer));
+  }
+  
+  pthread_mutex_unlock(&log_mutex);
+
+  trivial_log(-1, file_name, line_num, "End of dump");
+}
 
 void trivial_log(int error, const char* file_name,
   const int line_num, const char* format,...)
