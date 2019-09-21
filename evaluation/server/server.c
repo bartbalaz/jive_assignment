@@ -8,6 +8,7 @@
 #include <pthread.h>
 
 #include "common/log.h"
+#include "common/aor.h"
 
 #define BUFFER_SIZE 1024
 #define STACK_SIZE 8192
@@ -50,8 +51,14 @@ void *connection (void *arg)
 
 
 
-int server(int port)
+int server(int port, const char* aor_file_name)
 {
+  LOG("Reading aor file '%s'", aor_file_name)
+
+  open_aor_file(aor_file_name);
+
+  read_aor_file();
+
 	LOG("Starting server on port %d", port);
   
   int server_fd, client_fd, err, connection_count = 0;

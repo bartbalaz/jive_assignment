@@ -14,33 +14,97 @@
 int file_handle = -1;
 
 #define BUFFER_SIZE 128
-#define HASH_TABLE_SIZE 997
+#define HASH_TABLE_SIZE 997 /* Preferably use prime values */
 
 aor_t *aor_hash_table[HASH_TABLE_SIZE];
 
 unsigned int calc_hash(const char* key)
 {
+  /* Simple and stupid hash function, that adds all the chars of the
+   * key
+   */
   unsigned int hash = 0;
   
-  for(i = 0; i < strlen(key); i++) {
+  for(int i = 0; i < strlen(key); i++) {
     hash += key[i];
   }
 
-  return hash;
+  return hash % HASH_TABLE_SIZE;
+}
+
+/* For testing purposes */
+void dump_all_aors_to_file(const char* filename)
+{
+  int dump_file_handle = open("out.json", O_CREAT | O_TRUNC | O_RDWR,
+                          S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH  );
+
+  ASSERT_E(dump_file_handle > 0, "Could not open dump file");
+
+  aor_t *aor = NULL;
+
+  for(int i = 0; i < HASH_TABLE_SIZE; i++)
+  {
+    aor = aor_hash_table[i];
+    while(aor)
+    {
+      write(dump_file_handle, aor->content, strlen(aor->content));
+      aor = aor->next;
+    }
+  }
+
+  close(dump_file_handle);
 }
 
 void open_aor_file(char* filename)
 {
-    ASSERT(file_handle == -1, "File already opened");
+  ASSERT(file_handle == -1, "File already opened");
 
-    file_handle = open(filename, O_RDONLY);
+  file_handle = open(filename, O_RDONLY);
 
-    /* clear the hash table */
-    for(int i = 0; i < HASH_TABLE_SIZE; i++) {
-      aor_hash_table[i] = NULL;
+  /* clear the hash table */
+  for(int i = 0; i < HASH_TABLE_SIZE; i++) {
+    
+    aor_hash_table[i] = NULL;
+  }
+
+  ASSERT_E(file_handle > 0, "Could not open file");
+}
+
+aor_t*
+get_first_aor(const char* key)
+{
+  unsigned int hash = calc_hash(key);
+
+  aor_t* aor = aor_hash_table[hash];
+
+  /* Does the hash entry contain a value? */
+  while(aor) {
+    /* Is the key we are looking for? */
+    if(!strcmp(aor->key, key))
+    {
+      break;
     }
+    aor = aor->next;
+  }
 
-    ASSERT_E(file_handle > 0, "Could not open file");
+  return aor;
+}
+
+aor_t*
+get_next_aor(aor_t* aor)
+{
+  const char* key = aor->key;
+  aor = aor->next;
+  
+  if( (aor!= NULL) && (strcmp(aor->key, key)) )
+  {
+    /* The next key is different, there are no more structs with
+     * the same key
+     */
+    aor = NULL;
+  }
+  
+  return aor;
 }
 
 void read_aor_file()
@@ -66,24 +130,26 @@ void read_aor_file()
     end = strchr(work_buffer, '}');
 
     if(!start || !end) {
-       
-      /* The work_buffer does not have enough room for the record */
+      /* The work_buffer does not have enough room for the record,
+       * need to double the buffer size
+       */
       work_buffer_size *= 2;
       work_buffer = (char*) realloc(work_buffer, work_buffer_size + 1);
       work_buffer[work_buffer_size] = 0;
     }
     
     while(start && end) {
-            
-      /* We have a complete record, create a content */
-      unsigned long long content_size = ((unsigned long long) end - (unsigned long long) start) + 2;
       
+      
+      /* We have a complete record, create a content, need to add 2 to compensage for the line termination */
+      unsigned long content_size = ((unsigned long) end - (unsigned long) start) + 2;
+
+      /* Allocating size +1 byte for null termination */
       char* content = (char*) malloc (content_size + 1);
       memcpy(content, start, content_size);
       content[content_size] = 0;
 
-      /* Shift the work buffer */
-
+      /* Shift the work buffer by the size of the current structure */
       memmove(work_buffer, work_buffer + content_size, work_buffer_size - content_size);
       memset(work_buffer + work_buffer_size - content_size, 0, content_size);
 
@@ -94,6 +160,7 @@ void read_aor_file()
       /* Adjust the values */
       total_read_chars -= content_size;
 
+      /* Structure processing */
 
       /* Let's search for the "addressOfRecord" key */
       char *cursor = strstr(content, "addressOfRecord");
@@ -110,6 +177,7 @@ void read_aor_file()
 
       ASSERT(cursor != NULL, "Could not find value");
 
+      /* Move to the first byte of the aor value */
       cursor++;
 
       /* Let's find the end of the value i.e. the '"' character */
@@ -121,9 +189,7 @@ void read_aor_file()
       content_size = (unsigned long long)end_of_value - (unsigned long long)cursor;
 
       char* key = (char*) malloc (content_size + 1);
-
       memcpy(key, cursor, content_size);
-
       key[content_size] = 0;
 
       /* Create the output data strcutre */
@@ -137,25 +203,30 @@ void read_aor_file()
 
       aor->next = NULL;
 
-      aor_t *head = NULL;
+      /* Store the entry in the hash table */
+      aor_t *head = aor_hash_table[hash];
 
-      if(aor_hash_table[hash] == NULL) {
+      if(head == NULL) {
+        /* Hash table entry is empty */
         aor_hash_table[hash] = aor;
       }
       else {
-        head = aor_hash_table[hash];
-      
-        
         while(head->next) {
-          
+          if(!strcmp(head->key, aor->key))
+          {
+            /* Duplicate entries are stored next to each others,
+             * so in case of duplication we'll be able to return
+             * muptiple structures */
+            LOG("Duplicate entry, storing anyways key='%s'", aor->key);
+            aor->next = head->next;
+            break;
+          }
           head = head->next;
         }
         head->next = aor;
       }
     }
   }
-
-  return head;
 }
   
 

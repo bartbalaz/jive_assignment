@@ -8,8 +8,8 @@ int main(int argc, char* argv[])
 {
   int ret = 0;
 
-  if(argc < 3) {
-    printf("Usage: %s <port_number> <log_file_name>\n", argv[0]);
+  if(argc < 4) {
+    printf("Usage: %s <port_number> <log_file_name> <aor_file>\n", argv[0]);
     ret = 1;
   }
   else {
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     }
     else {
       open_log_file(argv[2]);
-      ret = server(port);
+      ret = server(port, argv[3]);
     }
   }
 	

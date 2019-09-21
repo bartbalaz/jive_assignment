@@ -33,7 +33,9 @@ void open_log_file(const char* file_name) {
   ASSERT_E(log_file_handle > 0, "Could not open log file %s", file_name);
 
   LOG("Log file %s opened!", file_name);
-  
+
+  void *void_ptr;
+  ASSERT(sizeof(void_ptr) == 4, "Compilation in 64 bit mode is not supported!");
 }
 
 void close_log_file() {
