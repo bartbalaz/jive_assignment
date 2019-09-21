@@ -2,7 +2,7 @@
 extern "C" {
 #endif
 
-void client(const char* server_address, int port, int test_cycle);
+void client(const char* server_address, int port);
 
 #ifdef __cplusplus
 }

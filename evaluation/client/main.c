@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     }
     else {
       open_log_file("client.log");
-      client(argv[1], port, test_cycle);
+      client(argv[1], port);
     }
   }
 	
