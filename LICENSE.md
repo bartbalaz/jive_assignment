@@ -1,4 +1,4 @@
-Copyright 2018 Bartosz Balazinski
+Copyright 2019 Bartosz Balazinski
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
