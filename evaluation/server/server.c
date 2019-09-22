@@ -113,8 +113,9 @@ void *connection (void *arg)
     
     if(poll_record.revents == POLLIN) {
       
-      LOG("The file descriptor has some data");
       int read = recv(info->client_fd, buf + read_offset, BUFFER_SIZE - 1, 0);
+      LOG("Client connection %d, received %d bytes",
+          info->connection_count, read);
 
       if (!read) {
         LOG("Client requested to terminate connection %d from: %s",
@@ -124,7 +125,7 @@ void *connection (void *arg)
       ASSERT_E(read > 0, "Client read failed");
 
       /* Make the buffer safe for str functions */
-      buf[read] = 0;
+      buf[read_offset+read] = 0;
 
       read_offset = process_request(info->client_fd, buf);
     }

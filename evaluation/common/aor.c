@@ -217,7 +217,7 @@ void read_aor_file()
             /* Duplicate entries are stored next to each others,
              * so in case of duplication we'll be able to return
              * muptiple structures */
-            LOG("Duplicate entry, storing anyways key='%s'", aor->key);
+            LOG("Duplicate entry key='%s'", aor->key);
             aor->next = head->next;
             break;
           }
