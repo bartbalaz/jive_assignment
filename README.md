@@ -1,4 +1,4 @@
-# Challenge implementation
+# Challenge
 
 ## Review of the use case
 The implementation performs the following tasks:
