@@ -22,6 +22,7 @@ The following assumptions have been made:
 - Limited portability: The application will be devloped on Intel Ubuntu 16.04.
 - Limited corner cases: The application covers only the most obvious use (misuse) cases.
 - Basic coding style: No specific coding style was requested.
+- Limited initalizatization and cleanup: It is assumed that the registration dump file will be loaded once and the stored values will be releases upon application termination (i.e. no need to explicitely free the memory etc.).
 
 ## Design
 The implementation consists in 3 modules:
