@@ -181,13 +181,18 @@ void server(int port, const char* aor_file_name)
 
   ASSERT_E(pthread_attr_setstacksize(&attr, STACK_SIZE) != 0,
           "Could not set pthread stack size");
-
+  /*
+   * Wait for client connetctions
+   */
   while (1) {
     socklen_t client_len = sizeof(client);
     client_fd = accept(server_fd, (struct sockaddr *) &client, &client_len);
 
     ASSERT_E(client_fd > 0,"Could not establish new connection");
 
+    /*
+     * Create a thread for this connection
+     */
     struct connection_info *info = malloc(sizeof(struct connection_info));
     info->client_fd = client_fd;
     info->connection_count = connection_count++;

@@ -19,8 +19,8 @@ The following assumptions have been made:
 6. The implementation may have the following limitations:
 - Basic logging system: No levels, not deactivated in release build etc.
 - No recovery code: In some situations when facing issues the application stops instead of attempting to recover. For example, the application stops if the registration dump file is not properly formated. 
-- Limited portability: The application will only execute on a single system type (Intel Ubuntu 16.04).
-- Limited corner cases: The application only covers the most obvious use (misuse) cases.
+- Limited portability: The application will be devloped on Intel Ubuntu 16.04.
+- Limited corner cases: The application covers only the most obvious use (misuse) cases.
 - Basic coding style: No specific coding style was requested.
 
 ## Design
