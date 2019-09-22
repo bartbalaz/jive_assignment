@@ -24,7 +24,7 @@ The following assumptions have been made:
 - Basic coding style: No specific coding style was requested.
 
 ## Design
-The implementation consists in 3 parts:
+The implementation consists in 3 modules:
 1. **Common**: contains the implementation required by the client and the server. Namely it contains a trivial thread safe logging facility (log.c/.h) the parser and storage of the registration records (aor.c/.h). Both services are compiled into library libcommon.a. The registration records are stored in a hash table in a Key-Value structure where the key is the AOR while the value is the entire registration record (includig AOR). The hash function is trivial, it consists in adding all the values of all the characters in the AOR. The hash function was not tested for efficiency. Multiple registration records may be stored with the same AOR (key).
 2. **Server** (server.h/.c, main.c): Contains the implementation of the server main function. The server starts individual threads (pthreads) for each client connection. The client connections are polled with a 10 sec timeout if no data is received during tha time the connection is closed. The server parses each request and attemps to locate the registration record in the hash table. If the record is found the entire values is returned followed by CR/LF. If the record is not found only CR/LF is returned.
 3. **Client** (client.h/.c main.c): Contains a trivial implementation of the basic use case. When launched the client queries the server for simple records, it queries for inexistent records and multiple records (int the case the same AOR is associated to multiple registration records). Also, it issues multiple queries in the single TCP segment.
