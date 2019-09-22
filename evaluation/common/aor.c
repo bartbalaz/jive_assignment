@@ -140,7 +140,6 @@ void read_aor_file()
     
     while(start && end) {
       
-      
       /* We have a complete record, create a content, need to add 2 to compensage for the line termination */
       unsigned long long content_size = ((unsigned long long) end - (unsigned long long) start) + 2;
 
