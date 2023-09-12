@@ -1,4 +1,4 @@
-# Challenge
+# JIVE Assignment
 
 ## Review of the use case
 The implementation performs the following tasks:
